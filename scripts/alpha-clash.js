@@ -1,7 +1,7 @@
 
 function continueGame (){
     const alphabets = getRandomAlphabet();
-    // console.log(alphabets);
+    
 
     // display alphabet 
     const alphabet = getRandomAlphabet();
@@ -16,20 +16,34 @@ function continueGame (){
 
 function handelKeyboardKeyUp (event){
     const playerPressed = event.key;
-    console.log(playerPressed);
+
+    // stop the game
+    if(playerPressed === 'Escape'){
+        gameOver()
+    }
+    
 
     const currentAlphabetElement = document.getElementById('current-alphabet');
     const currentAlphabet = currentAlphabetElement.innerText;
     const expectedAlphabets = currentAlphabet.toLowerCase();
-    console.log(expectedAlphabets);
 
     if(playerPressed === expectedAlphabets){
-        console.log('you get a point');
+        const currentScore = getElementValueById('current-score');
+        const updatedScore = currentScore + 1;
+        setTextElementValueById('current-score', updatedScore)
+
+        // start a new Round
         removeBackgroundColor(expectedAlphabets)
         continueGame()
     }
     else{
-        console.log('you lost');
+        const currentLife = getElementValueById('current-life');
+        const updatedLife = currentLife -1;
+        setTextElementValueById('current-life', updatedLife)
+
+        if(updatedLife === 0){
+            gameOver();
+        }
     }
     
 }
@@ -37,9 +51,29 @@ function handelKeyboardKeyUp (event){
 document.addEventListener('keyup', handelKeyboardKeyUp)
 
 function play(){
+    // hide Everything 
     hideElementById('home-screen')
+    hideElementById('score')
     showElementById('play-ground');
+
+    setTextElementValueById('current-life', 5)
+    setTextElementValueById('current-score', 0)
+
     continueGame();
+}
+
+function gameOver(){
+    hideElementById('play-ground');
+    showElementById('score')
+
+    // update Final Score
+    const finalScore = getElementValueById('current-score');
+    console.log(finalScore);
+    setTextElementValueById('final-score', finalScore)
+
+    // clear the last selected alphabet 
+    const currentAlphabet = getElementTextById('current-alphabet');
+    removeBackgroundColor(currentAlphabet);
 }
 
  
